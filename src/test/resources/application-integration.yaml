@@ -23,11 +23,6 @@ management:
     enable:
       spring.security: false
     distribution:
-      percentiles:
-        http:
-          - 0.99
-          - 0.95
-          - 0.50
       percentiles-histogram:
         http:
           server.requests: true
