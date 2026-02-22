@@ -1,4 +1,4 @@
-﻿package org.willwolfram18.spring.fhir.starter
+﻿package org.willwolfram18.spring.fhir.starter.services
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.gclient.IQuery
