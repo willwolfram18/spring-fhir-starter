@@ -1,5 +1,6 @@
 ﻿package org.willwolfram18.spring.fhir.starter.controllers
 
+import org.hl7.fhir.r4.model.Condition
 import org.hl7.fhir.r4.model.Patient
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,6 +15,15 @@ class TestController(
         val result = fhirClient.search(Patient::class.java) {
             where(Patient.NAME.matches().value("Smith"))
         }
+
+        return "Success"
+    }
+
+    @GetMapping("/test/conditions/create")
+    fun create(): String {
+        val condition = Condition()
+
+        val result = fhirClient.create(condition)
 
         return "Success"
     }
