@@ -6,6 +6,7 @@ import org.hl7.fhir.r4.model.Patient
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.willwolfram18.spring.fhir.starter.services.InstrumentedFhirClient
+import org.willwolfram18.spring.fhir.starter.services.search
 
 class PatientResourceTests @Autowired constructor(
     private val instrumentedFhirClient: InstrumentedFhirClient,
@@ -27,7 +28,7 @@ class PatientResourceTests @Autowired constructor(
 
     @Test
     fun `instrumented search`() {
-        val response = instrumentedFhirClient.search(Patient::class.java) {
+        val response = instrumentedFhirClient.search<Patient> {
             where(StringClientParam("name").matches().value("Smith"))
         }
 
