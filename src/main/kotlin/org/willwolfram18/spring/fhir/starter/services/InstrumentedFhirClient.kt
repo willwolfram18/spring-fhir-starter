@@ -46,7 +46,8 @@ class InstrumentedFhirClient(
                 result = query.returnBundle(Bundle::class.java).execute()
             } catch (e: Exception) {
                 outcome = "error"
-                searchSpan.error(e)
+                searchSpan.tag("outcome", outcome.uppercase())
+                    .error(e)
                 throw e
             } finally {
                 searchSpan.end()
@@ -54,7 +55,7 @@ class InstrumentedFhirClient(
                 val timer = Timer.builder("fhir.client.request.duration")
                     .description("Duration of FHIR client operations")
                     .publishPercentiles(0.5, 0.9, 0.95, 0.99)
-                    .tags("operation", operationName, "fhir_version", fhirVersion, "outcome", outcome)
+                    .tags("operation", operationName, "fhir_version", fhirVersion, "outcome", outcome.uppercase())
                     .register(meterRegistry)
 
                 runningTimer.stop(timer)
@@ -87,7 +88,8 @@ class InstrumentedFhirClient(
                 result = createRequest.execute()
             } catch (e: Exception) {
                 outcome = "error"
-                searchSpan.error(e)
+                searchSpan.tag("outcome", outcome.uppercase())
+                    .error(e)
                 throw e
             } finally {
                 searchSpan.end()
@@ -95,7 +97,7 @@ class InstrumentedFhirClient(
                 val timer = Timer.builder("fhir.client.request.duration")
                     .description("Duration of FHIR client operations")
                     .publishPercentiles(0.5, 0.9, 0.95, 0.99)
-                    .tags("operation", operationName, "fhir_version", fhirVersion, "outcome", outcome)
+                    .tags("operation", operationName, "fhir_version", fhirVersion, "outcome", outcome.uppercase())
                     .register(meterRegistry)
 
                 runningTimer.stop(timer)
