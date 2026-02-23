@@ -35,6 +35,7 @@ management:
         spring.data.mongodb.command: true
         osh.conditions: true
         jdbc.query: true
+        fhir: true
     tags:
       service: ${spring.application.name}
 
