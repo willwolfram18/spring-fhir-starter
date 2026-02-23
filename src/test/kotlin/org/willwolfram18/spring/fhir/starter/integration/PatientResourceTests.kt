@@ -1,14 +1,13 @@
 ﻿package org.willwolfram18.spring.fhir.starter.integration
 
-import ca.uhn.fhir.rest.gclient.StringClientParam
-import org.hl7.fhir.r4.model.Bundle
-import org.hl7.fhir.r4.model.Patient
+import ca.uhn.fhir.rest.gclient.*
+import org.hl7.fhir.r4.model.*
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.willwolfram18.spring.fhir.starter.services.InstrumentedFhirClient
-import org.willwolfram18.spring.fhir.starter.services.search
-import org.willwolfram18.spring.fhir.starter.services.read
-import kotlin.test.assertEquals
+import org.springframework.beans.factory.annotation.*
+import org.willwolfram18.spring.fhir.starter.extensions.read
+import org.willwolfram18.spring.fhir.starter.extensions.search
+import org.willwolfram18.spring.fhir.starter.services.*
+import kotlin.test.*
 
 class PatientResourceTests @Autowired constructor(
     private val instrumentedFhirClient: InstrumentedFhirClient,

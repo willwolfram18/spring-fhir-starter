@@ -1,18 +1,12 @@
 ﻿package org.willwolfram18.spring.fhir.starter.services
 
-import ca.uhn.fhir.rest.api.MethodOutcome
-import ca.uhn.fhir.rest.client.api.IGenericClient
-import ca.uhn.fhir.rest.gclient.ICreateTyped
-import ca.uhn.fhir.rest.gclient.IQuery
-import ca.uhn.fhir.rest.gclient.IReadExecutable
-import ca.uhn.fhir.rest.gclient.IReadTyped
-import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.Timer
-import io.micrometer.tracing.Span
-import io.micrometer.tracing.Tracer
-import org.hl7.fhir.r4.model.Bundle
-import org.hl7.fhir.r4.model.Resource
-import org.springframework.stereotype.Service
+import ca.uhn.fhir.rest.api.*
+import ca.uhn.fhir.rest.client.api.*
+import ca.uhn.fhir.rest.gclient.*
+import io.micrometer.core.instrument.*
+import io.micrometer.tracing.*
+import org.hl7.fhir.r4.model.*
+import org.springframework.stereotype.*
 
 @Service
 class InstrumentedFhirClient(
