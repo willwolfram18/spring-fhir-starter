@@ -32,17 +32,6 @@ abstract class IntegrationTestBase {
     @Autowired
     lateinit var fhirClient: IGenericClient
 
-//    @Autowired
-//    private lateinit var otelTracer: SdkTracerProvider
-
-    @AfterEach
-    fun tearDown() {
-//        otelTracer.forceFlush()
-        runBlocking {
-            delay(5.seconds)
-        }
-    }
-
     @TestConfiguration
     open class FhirClientConfig {
         @Bean

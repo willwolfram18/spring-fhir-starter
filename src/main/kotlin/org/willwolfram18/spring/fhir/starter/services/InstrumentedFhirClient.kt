@@ -17,6 +17,10 @@ class InstrumentedFhirClient(
     private val meterRegistry: MeterRegistry,
 ) {
 
+    companion object {
+        const val FHIR_VERSION_TAG = "fhir.version"
+    }
+
     private val fhirVersion by lazy {
         fhirClient.fhirContext.version.version.name
     }
@@ -67,7 +71,7 @@ class InstrumentedFhirClient(
         // TODO consider using "host name instead of full serverBase
         .remoteServiceName(fhirClient.serverBase)
         .name(operation)
-        .tag("fhir_version", fhirVersion)
+        .tag(FHIR_VERSION_TAG, fhirVersion)
 
     private fun <R> executeWithTelemetry(operationName: String, block: () -> R): R =
         executeWithTracing(operationName) {
@@ -113,7 +117,7 @@ class InstrumentedFhirClient(
                 .publishPercentiles(0.5, 0.9, 0.95, 0.99)
                 .tags(
                     "operation", operationName,
-                    "fhir.version", fhirVersion,
+                    FHIR_VERSION_TAG, fhirVersion,
                     "outcome", outcome.name
                 )
                 .register(meterRegistry)

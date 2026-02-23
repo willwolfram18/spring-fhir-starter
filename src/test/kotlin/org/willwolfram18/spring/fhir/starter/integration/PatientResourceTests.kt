@@ -34,6 +34,9 @@ class PatientResourceTests @Autowired constructor(
             count(2)
         }
 
+        // TODO add unit tests
+        // TODO verify traces are present for one operation and resource
+        // TODO verify metrics are present for one operation and resource
         // Assert that the response contains patients with the name 'Smith'
         assert(response.entry.all { it.resource.resourceType.name == "Patient" })
         assertEquals(2, response.entry.size)
