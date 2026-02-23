@@ -11,6 +11,7 @@ class PatientResourceTests @Autowired constructor(
     private val instrumentedFhirClient: InstrumentedFhirClient,
 ) : IntegrationTestBase() {
 
+    // TODO need to validate traces
     @Test
     fun `search for patients with name 'Smith'`() {
         val searchBundle = fhirClient.search<Bundle>()
