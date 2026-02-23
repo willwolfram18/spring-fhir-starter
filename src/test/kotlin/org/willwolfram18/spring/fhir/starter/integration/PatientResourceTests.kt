@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.willwolfram18.spring.fhir.starter.services.InstrumentedFhirClient
 import org.willwolfram18.spring.fhir.starter.services.search
+import org.willwolfram18.spring.fhir.starter.services.read
+import kotlin.test.assertEquals
 
 class PatientResourceTests @Autowired constructor(
     private val instrumentedFhirClient: InstrumentedFhirClient,
@@ -34,5 +36,14 @@ class PatientResourceTests @Autowired constructor(
 
         // Assert that the response contains patients with the name 'Smith'
         assert(response.entry.any { it.resource.resourceType.name == "Patient" })
+    }
+
+    @Test
+    fun `instrumented read`() {
+        val response = instrumentedFhirClient.read<Patient> {
+            withId("89185911")
+        }
+
+        assertEquals("89185911", response.idElement.idPart)
     }
 }

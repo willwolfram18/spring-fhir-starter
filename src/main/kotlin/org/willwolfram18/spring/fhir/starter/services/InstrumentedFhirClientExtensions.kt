@@ -9,3 +9,7 @@ inline fun <reified T : Resource> InstrumentedFhirClient.search(
     }
 ): Bundle =
     search(T::class.java, block)
+
+inline fun <reified T : Resource> InstrumentedFhirClient.read(
+    noinline block: (IReadTyped<T>.() -> IReadExecutable<T>)
+): T = read(T::class.java, block)
