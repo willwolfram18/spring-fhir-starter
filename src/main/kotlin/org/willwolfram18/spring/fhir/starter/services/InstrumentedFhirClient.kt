@@ -8,7 +8,6 @@ import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
 import io.micrometer.tracing.Span
 import io.micrometer.tracing.Tracer
-import net.sf.saxon.regex.Operation
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
 import org.springframework.stereotype.Service
@@ -20,9 +19,13 @@ class InstrumentedFhirClient(
     private val meterRegistry: MeterRegistry,
 ) {
 
+    private val fhirVersion by lazy {
+        fhirClient.fhirContext.version.version.name
+    }
+
     fun <T : Resource> search(resource: Class<T>, queryBuilder: (IQuery<Bundle>.() -> IQuery<Bundle>)? = null): Bundle {
-        val fhirOperation = operation(resource, "Search")
-        val spanBuilder = span(fhirOperation)
+        val operationName = operation(resource, "Search")
+        val spanBuilder = span(operationName)
 
         if (tracer.currentSpan() != null) {
             spanBuilder.setParent(tracer.currentSpan()!!.context())
@@ -51,7 +54,7 @@ class InstrumentedFhirClient(
                 val timer = Timer.builder("fhir.client.request.duration")
                     .description("Duration of FHIR client operations")
                     .publishPercentiles(0.5, 0.9, 0.95, 0.99)
-                    .tags("operation", fhirOperation, "outcome", outcome)
+                    .tags("operation", operationName, "fhir_version", fhirVersion, "outcome", outcome)
                     .register(meterRegistry)
 
                 runningTimer.stop(timer)
@@ -62,14 +65,15 @@ class InstrumentedFhirClient(
     }
 
     fun <T : Resource> create(resource: T, block: (ICreateTyped.() -> ICreateTyped)? = null): MethodOutcome? {
-        val fhirOperation = operation(resource.javaClass, "Create")
-        val spanBuilder = span(fhirOperation)
+        val operationName = operation(resource.javaClass, "Create")
+        val spanBuilder = span(operationName)
 
         if (tracer.currentSpan() != null) {
             spanBuilder.setParent(tracer.currentSpan()!!.context())
         }
 
         val searchSpan = spanBuilder.start()
+        // add separate tags for operation name and fhir version on the span
         val createRequest = fhirClient.create()
             .resource(resource)
         // start a Micrometer Timer sample so we can record duration with outcome-tag afterwards
@@ -91,7 +95,7 @@ class InstrumentedFhirClient(
                 val timer = Timer.builder("fhir.client.request.duration")
                     .description("Duration of FHIR client operations")
                     .publishPercentiles(0.5, 0.9, 0.95, 0.99)
-                    .tags("operation", fhirOperation, "outcome", outcome)
+                    .tags("operation", operationName, "fhir_version", fhirVersion, "outcome", outcome)
                     .register(meterRegistry)
 
                 runningTimer.stop(timer)
@@ -102,11 +106,12 @@ class InstrumentedFhirClient(
     }
 
     private fun operation(resource: Class<*>, name: String): String =
-        "${resource.simpleName}.$name (${fhirClient.fhirContext.version.version.name})"
+        "${resource.simpleName}.$name"
 
     private fun span(operation: String): Span.Builder = tracer.spanBuilder()
         .kind(Span.Kind.CLIENT)
         // TODO consider using "host name instead of full serverBase
         .remoteServiceName(fhirClient.serverBase)
         .name(operation)
+        .tag("fhir_version", fhirVersion)
 }
