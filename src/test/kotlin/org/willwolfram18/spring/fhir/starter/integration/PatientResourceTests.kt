@@ -31,10 +31,12 @@ class PatientResourceTests @Autowired constructor(
     fun `instrumented search`() {
         val response = instrumentedFhirClient.search<Patient> {
             where(StringClientParam("name").matches().value("Smith"))
+            count(2)
         }
 
         // Assert that the response contains patients with the name 'Smith'
-        assert(response.entry.any { it.resource.resourceType.name == "Patient" })
+        assert(response.entry.all { it.resource.resourceType.name == "Patient" })
+        assertEquals(2, response.entry.size)
     }
 
     @Test

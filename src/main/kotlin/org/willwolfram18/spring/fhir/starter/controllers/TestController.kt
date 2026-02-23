@@ -15,6 +15,7 @@ class TestController(
     fun searchPatients(): List<String> {
         val result = fhirClient.search<Patient> {
             where(Patient.NAME.matches().value("Smith"))
+            count(2)
         }
 
         return result.entry.mapNotNull { it.resource as? Patient }

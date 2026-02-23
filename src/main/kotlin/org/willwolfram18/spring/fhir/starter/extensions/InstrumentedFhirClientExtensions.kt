@@ -14,3 +14,6 @@ inline fun <reified T : Resource> InstrumentedFhirClient.search(
 inline fun <reified T : Resource> InstrumentedFhirClient.read(
     noinline block: (IReadTyped<T>.() -> IReadExecutable<T>)
 ): T = read(T::class.java, block)
+
+inline fun <reified T : IClientExecutable<*, R>, R> IClientExecutable<T, R>.executeJson(): R =
+    encodedJson().execute()

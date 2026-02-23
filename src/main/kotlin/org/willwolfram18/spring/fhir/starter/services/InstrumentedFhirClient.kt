@@ -7,6 +7,8 @@ import io.micrometer.core.instrument.*
 import io.micrometer.tracing.*
 import org.hl7.fhir.r4.model.*
 import org.springframework.stereotype.*
+import org.willwolfram18.spring.fhir.starter.extensions.*
+import org.willwolfram18.spring.fhir.starter.model.OperationOutcome
 
 @Service
 class InstrumentedFhirClient(
@@ -30,7 +32,7 @@ class InstrumentedFhirClient(
                 .forResource(resource)
                 .run(queryBuilder)
 
-            query.returnBundle(Bundle::class.java).execute()
+            query.returnBundle(Bundle::class.java).executeJson()
         }
     }
 
@@ -42,7 +44,7 @@ class InstrumentedFhirClient(
                 .resource(resource)
                 .run(block)
 
-            createRequest.execute()
+            createRequest.executeJson()
         }
     }
 
@@ -53,7 +55,7 @@ class InstrumentedFhirClient(
             fhirClient.read()
                 .resource(resource)
                 .run(block)
-                .execute()
+                .executeJson()
         }
     }
 
@@ -98,21 +100,21 @@ class InstrumentedFhirClient(
     // Helper that handles Micrometer Timer lifecycle and outcome tagging for metrics.
     private fun <R> executeWithTimer(operationName: String, block: () -> R): R {
         val runningTimer = Timer.start(meterRegistry)
-        var outcome = "SUCCESS"
+        var outcome = OperationOutcome.SUCCESS
 
         try {
             return block()
         } catch (e: Exception) {
-            outcome = "ERROR"
+            outcome = OperationOutcome.ERROR
             throw e
         } finally {
             val timer = Timer.builder("fhir.client.request.duration")
-                .description("Duration of FHIR client operations")
+                .description("Duration of HTTP FHIR client operations")
                 .publishPercentiles(0.5, 0.9, 0.95, 0.99)
                 .tags(
                     "operation", operationName,
-                    "fhir_version", fhirVersion,
-                    "outcome", outcome
+                    "fhir.version", fhirVersion,
+                    "outcome", outcome.name
                 )
                 .register(meterRegistry)
 
