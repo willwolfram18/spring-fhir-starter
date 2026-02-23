@@ -36,19 +36,19 @@ dependencies {
     api("org.aspectj:aspectjweaver")
 
     // Temporary for debugging
-//    api("org.springframework.boot:spring-boot-starter-web")
-//    api("io.micrometer:micrometer-registry-prometheus")
+    api("org.springframework.boot:spring-boot-starter-web")
+    api("io.micrometer:micrometer-registry-prometheus")
 
     // Testing
     testImplementation(kotlin("test"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     // Items for enabling tracing export during test https://docs.spring.io/spring-boot/3.5/reference/actuator/tracing.html#actuator.micrometer-tracing.tracer-implementations.otel-zipkin
-//    implementation("io.micrometer:micrometer-tracing-bridge-otel")
-//    implementation("io.opentelemetry:opentelemetry-exporter-zipkin")
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-    testImplementation("io.micrometer:micrometer-tracing-bridge-otel")
-    testImplementation("io.opentelemetry:opentelemetry-exporter-zipkin")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel")
+    implementation("io.opentelemetry:opentelemetry-exporter-zipkin")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+//    testImplementation("io.micrometer:micrometer-tracing-bridge-otel")
+//    testImplementation("io.opentelemetry:opentelemetry-exporter-zipkin")
+//    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 }
 
 tasks.test {

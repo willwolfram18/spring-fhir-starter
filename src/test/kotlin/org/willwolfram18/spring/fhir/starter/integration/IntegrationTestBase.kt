@@ -38,9 +38,9 @@ abstract class IntegrationTestBase {
     @AfterEach
     fun tearDown() {
 //        otelTracer.forceFlush()
-//        runBlocking {
-//            delay(5.seconds)
-//        }
+        runBlocking {
+            delay(5.seconds)
+        }
     }
 
     @TestConfiguration
