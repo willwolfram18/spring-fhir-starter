@@ -113,5 +113,5 @@ class InstrumentedFhirClient(
         // TODO consider using "host name instead of full serverBase
         .remoteServiceName(fhirClient.serverBase)
         .name(operation)
-        .tag("fhir_version", fhirVersion)
+        .tag("fhir.version", fhirVersion)
 }
